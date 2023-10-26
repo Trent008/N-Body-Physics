@@ -23,9 +23,9 @@ timewarpOptions = [1, 5, 10, 50, 100, 1000, 10000]
 scale = 1 # display scale factor for zoom
 
 planets = [] # list of planet objects
-planets.append(Planet(Vector(0.0, 0.0, 0.0), Vector(0.0, -0.3, 0.0), 40.0))
-planets.append(Planet(Vector(1.0, 0.0, 0.0), Vector(0.0, 6, 0.0), 1.0))
-planets.append(Planet(Vector(2.5, 0.0, 0.0), Vector(0.0, 4, 0.0), 2.0))
+planets.append(Planet(Vector([0.0, 0.0, 0.0]), Vector([0.0, -0.3, 0.0]), 40.0))
+planets.append(Planet(Vector([1.0, 0.0, 0.0]), Vector([0.0, 6, 0.0]), 1.0))
+planets.append(Planet(Vector([2.5, 0.0, 0.0]), Vector([0.0, 4, 0.0]), 2.0))
 
 
 # Main game loop
@@ -65,11 +65,20 @@ while True:
             if j != i:
                 # add the acceleration toward planet j to planet i's current acceleration
                 i.acceleration.add(i.getRelativeAcceleration(j))
+        
         # update each planet's position and velocity
         i.update(dt * timewarpOptions[timewarpIndex//2])
-        # update the screen display
-        i.displayPosition = [X//2 + scale*150*i.position.x, Y//2 - scale*150*i.position.y]
+        # scale the planet display position
+        i.displayPosition = i.position.getScaled(scale*150)
+        # invert the vertical direction
+        i.displayPosition.coordinates[1] *= -1
+        # offset to center of screen
+        i.displayPosition.add(Vector([X//2, Y//2, 0]))
+        # calculate diameter based on mass
         i.displayDiameter = scale*2*pow(i.mass, 1/3)
-        pygame.draw.circle(screen, white, i.displayPosition, i.displayDiameter)
+        # draw planet
+        pygame.draw.circle(screen, white, [i.displayPosition.getX(), i.displayPosition.getY()], i.displayDiameter)
+        # print(i.position, end="  ")
+    # print()
     # display updated graphics
     pygame.display.flip()
