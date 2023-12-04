@@ -7,7 +7,7 @@ class Planet:
         self.velocity = startVelocity  # starting velocity
         self.mass = mass  # mass of planet
         self.acceleration = Vector()  # current acceleration
-        displayPosition = [0, 0]  # position to display the planet on screen
+        displayPosition = Vector()  # position to display the planet on screen
         displayDiameter = 0  # diameter to display the planet
 
     # return this planet's acceleration toward another planet
@@ -22,3 +22,4 @@ class Planet:
         self.position.add(self.velocity.getScaled(dt))
         self.velocity.add(self.acceleration.getScaled(dt))
         self.acceleration.reset()
+        self.displayPosition = Vector(self.position.x, self.position.y, self.position.z)

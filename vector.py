@@ -1,3 +1,5 @@
+import math
+
 # stores and manipulates (x, y, z) coordinates
 class Vector:
     def __init__(self, x=0.0, y=0.0, z=0.0):
@@ -38,6 +40,19 @@ class Vector:
     # return x^2 + y^2 + z^2
     def getRSquared(self):
         return pow(self.x, 2) + pow(self.y, 2) + pow(self.z, 2)
+    
+    # rotate this vector clockwise by the given angle
+    def rotateZCW(self, angle):
+        newx = self.x * math.cos(angle) + self.y * math.sin(angle)
+        newy = self.y * math.cos(angle) - self.x * math.sin(angle)
+        self.x = newx
+        self.y = newy
+    
+    def rotateX(self, angle):
+        newy = self.y * math.cos(angle) + self.z * math.sin(angle)
+        newz = self.z * math.cos(angle) - self.y * math.sin(angle)
+        self.y = newy
+        self.z = newz
 
     # reset to x=0, y=0, z=0
     def reset(self):

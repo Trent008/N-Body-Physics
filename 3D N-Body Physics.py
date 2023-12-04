@@ -15,7 +15,10 @@ white = (255, 255, 255)  # White color
 yellow = (255, 255, 0)  # yellow color
 font = pygame.font.Font('freesansbold.ttf', 14) # font object
 
-
+azimuth = 1
+heading = 0
+displayX = 0
+displayY = 0
 
 dt = 0.000001 # physics delta time
 timewarpIndex = 0 # timewarp option index
@@ -48,6 +51,19 @@ while True:
         if keys[pygame.K_MINUS]:
             scale /= 1.02
 
+        # change viewing angle
+        if keys[pygame.K_RIGHT]:
+            heading += 0.05;
+        if keys[pygame.K_LEFT]:
+            heading -= 0.05;
+        if keys[pygame.K_UP]:
+            azimuth += 0.05;
+        if keys[pygame.K_DOWN]:
+            azimuth -= 0.05;
+        
+    print(azimuth)
+
+
     # Clear the screen
     screen.fill((0, 0, 0))
     text = font.render(f'TimeWarp = {timewarpOptions[timewarpIndex//2]}X', True, yellow)
@@ -68,8 +84,11 @@ while True:
         # update each planet's position and velocity
         i.update(dt * timewarpOptions[timewarpIndex//2])
         # update the screen display
-        i.displayPosition = [X//2 + scale*150*i.position.x, Y//2 - scale*150*i.position.y]
+        i.displayPosition.rotateZCW(heading)
+        i.displayPosition.rotateX(azimuth)
+        displayX = X//2 + scale*150*i.displayPosition.x
+        displayY = Y//2 - scale*150*i.displayPosition.y
         i.displayDiameter = scale*2*pow(i.mass, 1/3)
-        pygame.draw.circle(screen, white, i.displayPosition, i.displayDiameter)
+        pygame.draw.circle(screen, white, [displayX, displayY], i.displayDiameter)
     # display updated graphics
     pygame.display.flip()
