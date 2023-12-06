@@ -2,63 +2,64 @@ import math
 
 # stores and manipulates (x, y, z) coordinates
 class Vector:
-    def __init__(self, x=0.0, y=0.0, z=0.0):
-        self.x = x
-        self.y = y
-        self.z = z
+    def __init__(self, v = [0, 0, 0]):
+        self.v = list(v)
 
-    # add another vector to this vector
-    def add(self, obj):
-        self.x += obj.x
-        self.y += obj.y
-        self.z += obj.z
+    # return the vector addition
+    def __add__(self, other):
+        res = []
+        for i, j in zip(self.v, other.v):
+            res.append(i + j)
+        return Vector(res)
 
-    # subtract another vector from this vector
-    def subtract(self, obj):
-        self.x -= obj.x
-        self.y -= obj.y
-        self.z -= obj.z
+    # add a vector to this vector
+    def __iadd__(self, other):
+        return self + other
 
-    # return the vector addition with another vector
-    def getAdded(self, obj):
-        return Vector(self.x + obj.x, self.y + obj.y, self.z + obj.z)
+    # return the vector subtraction
+    def __sub__(self, other):
+        res = []
+        for i, j in zip(self.v, other.v):
+            res.append(i - j)
+        return Vector(res)
 
-    # return the vector subtraction of another vector
-    def getSubtracted(self, obj):
-        return Vector(self.x - obj.x, self.y - obj.y, self.z - obj.z)
+    # subtract a vector from this vector
+    def __isub__(self, other):
+        return self - other
+
+    # vector * constant or vector dot product
+    def __mul__(self, obj):
+        if (isinstance(obj, float) or isinstance(obj, int)):
+            res = []
+            for i in self.v:
+                res.append(i * obj)
+            return Vector(res)
+        else:
+            res = 0
+            for i, j in zip(self.v, obj.v):
+                res += i * j
+            return res
 
     # scale by a constant
-    def scale(self, k):
-        self.x *= k
-        self.y *= k
-        self.z *= k
-
-    # return this vector scaled by a constant
-    def getScaled(self, k):
-        return Vector(self.x * k, self.y * k, self.z * k)
-
-    # return x^2 + y^2 + z^2
-    def getRSquared(self):
-        return pow(self.x, 2) + pow(self.y, 2) + pow(self.z, 2)
+    def __imul__(self, obj):
+        return self * obj
     
     # rotate this vector clockwise by the given angle
     def rotateZCW(self, angle):
-        newx = self.x * math.cos(angle) + self.y * math.sin(angle)
-        newy = self.y * math.cos(angle) - self.x * math.sin(angle)
-        self.x = newx
-        self.y = newy
+        newx = self.v[0] * math.cos(angle) + self.v[1] * math.sin(angle)
+        newy = self.v[1] * math.cos(angle) - self.v[0] * math.sin(angle)
+        self.v[0] = newx
+        self.v[1] = newy
     
     def rotateX(self, angle):
-        newy = self.y * math.cos(angle) + self.z * math.sin(angle)
-        newz = self.z * math.cos(angle) - self.y * math.sin(angle)
-        self.y = newy
-        self.z = newz
+        newy = self.v[1] * math.cos(angle) + self.v[2] * math.sin(angle)
+        newz = self.v[2] * math.cos(angle) - self.v[1] * math.sin(angle)
+        self.v[1] = newy
+        self.v[2] = newz
 
     # reset to x=0, y=0, z=0
     def reset(self):
-        self.x = 0.0
-        self.y = 0.0
-        self.z = 0.0
+        self.v = [0, 0, 0]
 
     def __str__(self):
-        return f"({self.x}, {self.y}, {self.z})"
+        return str(self.v)
